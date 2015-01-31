@@ -6,12 +6,25 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/user');
+// var users = require('./routes/user');
 
 var app = express();
 
 var restful = require('node-restful');
 var mongoose = restful.mongoose;
+
+// User Schema
+var User = app.user = restful.model('user', mongoose.Schema({
+    name: 'string',
+    email: 'string'
+}))
+.methods(['get', 'post', 'put', 'delete'])
+.after('get',function(req, res, next){
+    console.log(">>>>>>>>> "+res.locals.bundle);
+    next();
+});
+
+User.register(app, '/users');
 
 // view engine setup
 
@@ -31,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect('mongodb://admin:test123@ds039411.mongolab.com:39411/proj1');
 
 app.use('/', routes);
-app.use('/users', users);
+// app.use('/users', users);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
