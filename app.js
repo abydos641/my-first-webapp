@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var util = require('util');
 
 var routes = require('./routes/index');
 // var users = require('./routes/user');
@@ -13,18 +14,6 @@ var app = express();
 var restful = require('node-restful');
 var mongoose = restful.mongoose;
 
-// User Schema
-var User = app.user = restful.model('user', mongoose.Schema({
-    name: 'string',
-    email: 'string'
-}))
-.methods(['get', 'post', 'put', 'delete'])
-.after('get',function(req, res, next){
-    console.log(">>>>>>>>> "+res.locals.bundle);
-    next();
-});
-
-User.register(app, '/users');
 
 // view engine setup
 
@@ -44,6 +33,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect('mongodb://admin:test123@ds039411.mongolab.com:39411/proj1');
 
 app.use('/', routes);
+// User Schema
+var User = app.user = restful.model('user', mongoose.Schema({
+    name: 'string',
+    email: 'string'
+}))
+.methods(['get', 'post', 'put', 'delete'])
+.after('get',function(req, res, next){
+    console.log(">>>>>>>>> "+res.locals.bundle);
+    next();
+})
+.after('post',function(req, res, next){
+    //console.log(">>>>>>>>> "+res.locals.bundle);
+    //console.log(util.inspect(req, {showHidden: false, depth: null}));
+    console.log("ballsacks", req.body)
+    next();
+});
+User.register(app, '/users');
 // app.use('/users', users);
 
 /// catch 404 and forward to error handler
