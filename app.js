@@ -22,6 +22,11 @@ app.set('view engine', 'ejs');
 
 // app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(logger('dev'));
+
+/* This line means 'application, you know JSON', 
+originally our code was before this declaration, 
+and our order of operations broke the app's 
+ability to read JSON */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -46,7 +51,7 @@ var User = app.user = restful.model('user', mongoose.Schema({
 .after('post',function(req, res, next){
     //console.log(">>>>>>>>> "+res.locals.bundle);
     //console.log(util.inspect(req, {showHidden: false, depth: null}));
-    console.log("ballsacks", req.body)
+    console.log("req.body", req.body)
     next();
 });
 User.register(app, '/users');
